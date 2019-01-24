@@ -1,0 +1,226 @@
+﻿@model Maanaim.Web.ViewModel.CalendarForm;
+
+@{
+    //ViewData["Title"] = "Contact";
+}
+<!--
+<h2>@ViewData["Title"]</h2>
+<h3>@ViewData["Message"]</h3>
+-->
+<div id="divModal" class="modal fade" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-hidden="true" style="padding-top:15%; overflow-y:visible;">
+    <div class="modal-dialog modal-m">
+        <div class="modal-content">
+            <div class="modal-header"><h3 style="margin:0;">Aguarde...</h3></div>
+            <div class="modal-body">
+                <div class="progress progress-striped active" style="margin-bottom:0;"><div class="progress-bar" style="width: 100%"></div></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@using (Html.BeginForm("Incluir", "Home", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="panel-heading">
+        <div class="panel-title">
+            <span style="font-weight: bold;">Incluir Evento no Calendário</span>
+        </div>
+    </div>
+
+    <div class="panel-body form-horizontal">
+
+
+
+        <div class="form-group">
+            <label for="txtTitulo" class="col-sm-3 control-label inputDate">Título:</label>
+            <div class="col-sm-6">
+                <input type="text" ID="txtTitle" name="Title" class="form-control" required />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="txtDescricao" class="col-sm-3 control-label inputDate">Descrição:</label>
+            <div class="col-sm-6">
+                <textarea ID="txtDescription" name="Description" class="form-control" required></textarea>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="txtStart" class="col-sm-3 control-label inputDate">Início:</label>
+            <div class="col-sm-6">
+                <input type="text" ID="txtStart" name="StartDate" class="inputDateInicio form-control" placeholder="Data e Hora" required />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="txtTermino" class="col-sm-3 control-label inputDate">Término:</label>
+            <div class="col-sm-6">
+                <input type="text" ID="txtEnd" name="EndDate" class="inputDateTermino form-control" placeholder="Data e Hora" required />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="ddlMinisterio" class="col-sm-3 control-label">Ministério:</label>
+            <div class="col-sm-6">
+                <select id="ddlMinisterio" name="Ministerio" class="form-control" required>
+                    <option value="">(Selecione um Ministério)</option>
+                    <option value="ADMM">Igreja em Geral</option>
+                    <option value="ME">Ministério de Ensino (Talmid)</option>
+                    <option value="MJ">Missão Jovem</option>
+                    <option value="MM">Ministério de Mulheres</option>
+                    <option value="MH">Ministério de Homens</option>
+                    <option value="MF">Ministério da Família</option>
+                    <option value="MI">Ministério de Intercessão</option>
+                    <option value="SOMA">Missão Soma</option>
+                    <option value="MK">Missão Kids</option>
+                    <option value="MO">Ministério de Obreiros</option>
+                    <option value="MA">Ministério Acolhida</option>
+                    <option value="EF">Estrutura Física</option>
+                    <option value="ML">Ministério de Louvor</option>
+                    <option value="MEv">Ministério de Eventos</option>
+                    <option value="MS&Tec">Mídias Sociais e Tecnologia</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="txtCorApresentacao" class="col-sm-3 control-label">Cor de Apresentação:</label>
+            <div class="col-sm-6">
+                <input type="text" ID="txtCorApresentacao" class="form-control" style="background-color:lemonchiffon" />
+                <input type="hidden" id="hiddenCorApresentacao" name="Color" value="lemonchiffon" />
+                <div style="margin-top:10px;">
+                    <input type="button" class="btn color-picker" style="background-color:palegreen; width:50px; height:50px;" alt="palegreen" />
+                    <input type="button" class="btn color-picker" style="background-color:lightsalmon; width:50px; height:50px;" alt="lightsalmon" />
+                    <input type="button" class="btn color-picker" style="background-color:lemonchiffon; width:50px; height:50px;" alt="lemonchiffon" />
+                    <input type="button" class="btn color-picker" style="background-color:paleturquoise; width:50px; height:50px;" alt="paleturquoise" />
+                    <input type="button" class="btn color-picker" style="background-color:gainsboro; width:50px; height:50px;" alt="gainsboro" />
+                </div>
+            </div>
+
+        </div>
+        @{
+            if (ViewData["Message"] != null && ViewData["MessageClass"] != null)
+            {
+                <div id="divMsg" class="alert @ViewData["MessageClass"]">
+                    <strong>@ViewData["Message"]</strong>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            }
+        }
+
+
+    </div>
+
+
+    <div class="panel-footer text-right">
+        <!--
+            <button id="btnSave" type="button" class="btn btn-success">Salvar</button>
+        -->
+        <button id="btnSave" type="submit" class="btn btn-success">Salvar</button>
+
+        <button type="button" class="btn btn-danger">Cancelar</button>
+
+    </div>
+
+}
+
+
+
+<div class="row">
+    <div class="col-sm-12">
+        <asp:Literal ID="ltlInclusaoMsg" runat="server"></asp:Literal>
+    </div>
+</div>
+
+@section Scripts {
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            
+            var dateNow = new Date();
+
+            $(".inputDateInicio").datetimepicker({ locale: "pt-BR", format: "DD/MM/YYYY HH:mm:ss", defaultDate: dateNow, sideBySide: true });
+
+            $(".inputDateTermino").datetimepicker({ locale: "pt-BR", format: "DD/MM/YYYY HH:mm:ss", defaultDate: dateNow, sideBySide: true });
+
+            $(".color-picker").click(
+                function () {
+                    var color = $(this).attr("alt");
+                    $("#txtCorApresentacao").css("background-color", color);
+                }
+            );
+            
+            $("form").submit(function (event) {
+                $("#divModal").modal();
+                //event.preventDefault();
+            });
+
+            setTimeout(
+                function ()
+                {
+                    $(".alert-success").fadeOut();
+                }, 2000
+            );
+            
+
+            $("#btnSave").click(
+                function () {
+
+
+                    //$.ajax({
+                    //    method: "POST",
+                    //    url: "/Home/Incluir",
+                    //    data: model
+                    //})
+                    //    .done(function (data) {
+                    //        alert("Data Saved: " + data);
+                    //    })
+                    //    .fail(function (data) {
+                    //        alert("error");
+                    //    });
+
+                    $.post("/Home/Incluir", model, function (data) {
+                        data = data;
+                        /*
+                        if (data.TemErro === false) {
+                            $('#situacao_' + inscricao).text('Cancelada pelo candidato');
+                            $('#acao_' + inscricao).html(' ');
+                        }
+                        else if (data.SenhaInvalida) {
+                            $.alert('Senha inválida.');
+                        }
+                        else {
+                            $.alert({
+                                icon: 'fa fa-warning',
+                                title: "Ocorreu algum erro ao cancelar sua inscrição",
+                                content: "por favor entre em contato conosco.",
+                                type: "red",
+                                typeAnimated: true
+                            });
+                        }
+                        $('#' + sigla + '-collapse').removeClass('loading');
+                        */
+                    })
+                        .done(function (data) {
+                            alert("second success");
+                        })
+                        .fail(function () {
+                            alert("error");
+                        });
+
+                }
+            );
+
+
+
+            //});
+        });
+
+
+    </script>
+
+}
+
