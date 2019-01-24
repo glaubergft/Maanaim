@@ -1,23 +1,5 @@
 ﻿@model Maanaim.Web.ViewModel.CalendarForm;
 
-@{
-    //ViewData["Title"] = "Contact";
-}
-<!--
-<h2>@ViewData["Title"]</h2>
-<h3>@ViewData["Message"]</h3>
--->
-<div id="divModal" class="modal fade" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-hidden="true" style="padding-top:15%; overflow-y:visible;">
-    <div class="modal-dialog modal-m">
-        <div class="modal-content">
-            <div class="modal-header"><h3 style="margin:0;">Aguarde...</h3></div>
-            <div class="modal-body">
-                <div class="progress progress-striped active" style="margin-bottom:0;"><div class="progress-bar" style="width: 100%"></div></div>
-            </div>
-        </div>
-    </div>
-</div>
-
 @using (Html.BeginForm("Incluir", "Home", FormMethod.Post))
 {
     @Html.AntiForgeryToken()
@@ -116,12 +98,10 @@
 
 
     <div class="panel-footer text-right">
-        <!--
-            <button id="btnSave" type="button" class="btn btn-success">Salvar</button>
-        -->
+
         <button id="btnSave" type="submit" class="btn btn-success">Salvar</button>
 
-        <button type="button" class="btn btn-danger">Cancelar</button>
+        <a class="btn btn-danger" href="/" role="button">Cancelar</a>
 
     </div>
 
@@ -155,68 +135,15 @@
             
             $("form").submit(function (event) {
                 $("#divModal").modal();
-                //event.preventDefault();
             });
 
             setTimeout(
                 function ()
                 {
                     $(".alert-success").fadeOut();
-                }, 2000
-            );
-            
-
-            $("#btnSave").click(
-                function () {
-
-
-                    //$.ajax({
-                    //    method: "POST",
-                    //    url: "/Home/Incluir",
-                    //    data: model
-                    //})
-                    //    .done(function (data) {
-                    //        alert("Data Saved: " + data);
-                    //    })
-                    //    .fail(function (data) {
-                    //        alert("error");
-                    //    });
-
-                    $.post("/Home/Incluir", model, function (data) {
-                        data = data;
-                        /*
-                        if (data.TemErro === false) {
-                            $('#situacao_' + inscricao).text('Cancelada pelo candidato');
-                            $('#acao_' + inscricao).html(' ');
-                        }
-                        else if (data.SenhaInvalida) {
-                            $.alert('Senha inválida.');
-                        }
-                        else {
-                            $.alert({
-                                icon: 'fa fa-warning',
-                                title: "Ocorreu algum erro ao cancelar sua inscrição",
-                                content: "por favor entre em contato conosco.",
-                                type: "red",
-                                typeAnimated: true
-                            });
-                        }
-                        $('#' + sigla + '-collapse').removeClass('loading');
-                        */
-                    })
-                        .done(function (data) {
-                            alert("second success");
-                        })
-                        .fail(function () {
-                            alert("error");
-                        });
-
-                }
+                }, 4000
             );
 
-
-
-            //});
         });
 
 
