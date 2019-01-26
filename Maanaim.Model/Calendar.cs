@@ -21,10 +21,10 @@ namespace Maanaim.Model
         [BsonElement("EndDate")]
         public DateTime EndDate { get; set; }
 
-        [BsonElement("Ministerio")]
-        public string Ministerio { get; set; }
+        [BsonElement("Ministry")]
+        public string Ministry { get; set; }
 
-        [BsonElement("color")]
+        [BsonElement("Color")]
         public string Color { get; set; }
     }
 }

@@ -9,6 +9,7 @@ using Microsoft.Extensions.Options;
 using Maanaim.Web.Models;
 using Maanaim.Model;
 using Maanaim.Web.ViewModel;
+using Maanaim.Web.ExtensionMethods;
 
 namespace Maanaim.Controllers
 {
@@ -28,106 +29,50 @@ namespace Maanaim.Controllers
         {
             return View();
         }
-
-        //public string Index()
-        //{
-        //    return config.Value.ConnectionString;
-        //}
-
+        
         public IActionResult Gerenciar()
         {
-            ViewData["Message"] = "Your application description page.";
-
-            return View();
+            var colCalendar = new Data.DataCalendar(config.Value.ConnectionString).List().ToList<Calendar>();
+            var colCalendarForm = from calendar in colCalendar
+                                  select calendar.ToCalendarForm();
+            return View(colCalendarForm.ToList());
         }
-
+        
         [HttpGet]
-        public IActionResult Incluir()
+        public IActionResult IncluirAlterar(string Id)
         {
-            return View();
+            CalendarForm calendarForm;
+            if (!string.IsNullOrEmpty(Id))
+                calendarForm = (new Data.DataCalendar(config.Value.ConnectionString)).Find(Id).ToCalendarForm();
+            else
+                calendarForm = new CalendarForm();
+            return View("IncluirAlterar", calendarForm);
         }
-        /*
+
         [HttpPost]
-        public JsonResult Incluir(CalendarForm calendarForm)
+        public IActionResult IncluirAlterar(CalendarForm calendarForm)
         {
-            dynamic result = new System.Dynamic.ExpandoObject();
-            result.ErrorMessage = "";
+            
 
             try
             {
-                string[] startDateSplit = calendarForm.StartDate.Split('/');
-                string[] endDateSplit = calendarForm.EndDate.Split('/');
-
-                var startDate = new DateTime(
-                    int.Parse(startDateSplit[2].Split(' ')[0]), //ano
-                    int.Parse(startDateSplit[1]),
-                    int.Parse(startDateSplit[0])
-                    );
-
-                var endDate = new DateTime(
-                    int.Parse(endDateSplit[2].Split(' ')[0]), //ano
-                    int.Parse(endDateSplit[1]),
-                    int.Parse(endDateSplit[0])
-                    );
-
-                var calendar = new Calendar()
-                {
-                    Title = calendarForm.Title,
-                    Description = calendarForm.Description,
-                    StartDate = startDate,
-                    EndDate = endDate,
-                    Color = calendarForm.Color
-                };
-
-                (new Data.DataCalendar(config.Value.ConnectionString)).Insert(calendar);
                 
-            }
-            catch(Exception ex)
-            {
-                result.ErrorMessage = ex.Message;
-            }
+                var calendar = calendarForm.ToCalendar();
 
-            
-
-            return new JsonResult(result);
-        }
-        */
-
-        [HttpPost]
-        public IActionResult Incluir(CalendarForm calendarForm)
-        {
-            
-
-            try
-            {
-                string[] startDateSplit = calendarForm.StartDate.Split('/');
-                string[] endDateSplit = calendarForm.EndDate.Split('/');
-
-                var startDate = new DateTime(
-                    int.Parse(startDateSplit[2].Split(' ')[0]), //ano
-                    int.Parse(startDateSplit[1]),
-                    int.Parse(startDateSplit[0])
-                    );
-
-                var endDate = new DateTime(
-                    int.Parse(endDateSplit[2].Split(' ')[0]), //ano
-                    int.Parse(endDateSplit[1]),
-                    int.Parse(endDateSplit[0])
-                    );
-
-                var calendar = new Calendar()
+                if(string.IsNullOrEmpty(calendarForm.Id))
                 {
-                    Title = calendarForm.Title,
-                    Description = calendarForm.Description,
-                    StartDate = startDate,
-                    EndDate = endDate,
-                    Ministerio = calendarForm.Ministerio,
-                    Color = calendarForm.Color
-                };
+                    (new Data.DataCalendar(config.Value.ConnectionString)).Insert(calendar);
+                    calendarForm = new CalendarForm();
+                    ViewData["Message"] = "Programação incluída com sucesso!";
+                }
+                else
+                {
+                    (new Data.DataCalendar(config.Value.ConnectionString)).Update(calendar);
+                    ViewData["Message"] = "Programação alterada com sucesso!";
+                }
+                    
 
-                (new Data.DataCalendar(config.Value.ConnectionString)).Insert(calendar);
-
-                ViewData["Message"] = "Programação incluída com sucesso!";
+                
                 ViewData["MessageClass"] = "alert-success";
 
             }
@@ -139,12 +84,40 @@ namespace Maanaim.Controllers
 
 
 
-            return View();
+            return View(calendarForm);
         }
 
-        public IActionResult Privacy()
+
+        [HttpPost]
+        public IActionResult Excluir(CalendarForm calendarForm)
         {
-            return View();
+            //ViewBag.Message = "Ocorreu um erro. (" + ex.Message + ")";
+            //ViewBag.MessageClass = "alert-danger";
+            try
+            {
+
+                var calendar = calendarForm.ToCalendar();
+
+                if (string.IsNullOrEmpty(calendarForm.Id))
+                {
+                    throw new Exception("não foi possível excluir");
+                }
+                else
+                {
+                    (new Data.DataCalendar(config.Value.ConnectionString)).Delete(calendar);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Message = "Ocorreu um erro. (" + ex.Message + ")";
+                ViewBag.MessageClass = "alert-danger";
+            }
+
+            var colCalendar = new Data.DataCalendar(config.Value.ConnectionString).List().ToList<Calendar>();
+            var colCalendarForm = from calendar in colCalendar
+                                  select calendar.ToCalendarForm();
+            return View("Gerenciar", colCalendarForm.ToList());
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

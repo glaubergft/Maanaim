@@ -57,7 +57,9 @@
                 <ul class="nav navbar-nav">
                     <li><a asp-area="" asp-controller="Home" asp-action="Index">Visualizar Agenda</a></li>
                     <li><a asp-area="" asp-controller="Home" asp-action="Gerenciar">Gerenciar Calendário</a></li>
-                    <li><a asp-area="" asp-controller="Home" asp-action="Incluir">Incluir Programação</a></li>
+                    <li>                        
+                        @Html.ActionLink("Incluir Programação", "IncluirAlterar", "Home", new { Id = "" })
+                    </li>
                 </ul>
             </div>
         </div>
@@ -77,7 +79,7 @@
 
         <hr />
         <footer>
-            <p>&copy; 2019 - AD Missão Maanaim</p>
+            <p>&copy; @System.DateTime.Now.Year - AD Missão Maanaim</p>
         </footer>
     </div>
 

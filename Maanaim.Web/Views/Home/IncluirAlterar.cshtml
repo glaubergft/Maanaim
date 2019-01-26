@@ -1,51 +1,67 @@
 ﻿@model Maanaim.Web.ViewModel.CalendarForm;
 
-@using (Html.BeginForm("Incluir", "Home", FormMethod.Post))
+@using (Html.BeginForm("IncluirAlterar", "Home", FormMethod.Post))
 {
     @Html.AntiForgeryToken()
 
     <div class="panel-heading">
         <div class="panel-title">
-            <span style="font-weight: bold;">Incluir Evento no Calendário</span>
+            <div style="font-weight: bold;">
+
+                @if (string.IsNullOrEmpty(Model.Id))
+                {
+                    <h4>Incluir Programação no Calendário</h4>
+                }
+                else
+                {
+                    <h4>Alterar Programação no Calendário</h4>
+                }
+            </div>
+
+
         </div>
+
+
     </div>
+
+
 
     <div class="panel-body form-horizontal">
 
-
+        <input type="hidden" name="Id" value="@Model.Id" />
 
         <div class="form-group">
             <label for="txtTitulo" class="col-sm-3 control-label inputDate">Título:</label>
             <div class="col-sm-6">
-                <input type="text" ID="txtTitle" name="Title" class="form-control" required />
+                <input type="text" ID="txtTitle" name="Title" class="form-control" value="@Model.Title" required />
             </div>
         </div>
 
         <div class="form-group">
             <label for="txtDescricao" class="col-sm-3 control-label inputDate">Descrição:</label>
             <div class="col-sm-6">
-                <textarea ID="txtDescription" name="Description" class="form-control" required></textarea>
+                <textarea ID="txtDescription" name="Description" class="form-control" required>@Model.Description</textarea>
             </div>
         </div>
 
         <div class="form-group">
             <label for="txtStart" class="col-sm-3 control-label inputDate">Início:</label>
             <div class="col-sm-6">
-                <input type="text" ID="txtStart" name="StartDate" class="inputDateInicio form-control" placeholder="Data e Hora" required />
+                <input type="text" ID="txtStart" name="StartDate" class="inputDateInicio form-control" placeholder="Data e Hora" value="@Model.StartDate" required />
             </div>
         </div>
 
         <div class="form-group">
             <label for="txtTermino" class="col-sm-3 control-label inputDate">Término:</label>
             <div class="col-sm-6">
-                <input type="text" ID="txtEnd" name="EndDate" class="inputDateTermino form-control" placeholder="Data e Hora" required />
+                <input type="text" ID="txtEnd" name="EndDate" class="inputDateTermino form-control" placeholder="Data e Hora" value="@Model.EndDate" required />
             </div>
         </div>
 
         <div class="form-group">
             <label for="ddlMinisterio" class="col-sm-3 control-label">Ministério:</label>
             <div class="col-sm-6">
-                <select id="ddlMinisterio" name="Ministerio" class="form-control" required>
+                <select id="ddlMinisterio" name="Ministry" class="form-control" required>
                     <option value="">(Selecione um Ministério)</option>
                     <option value="ADMM">Igreja em Geral</option>
                     <option value="ME">Ministério de Ensino (Talmid)</option>
@@ -69,8 +85,8 @@
         <div class="form-group">
             <label for="txtCorApresentacao" class="col-sm-3 control-label">Cor de Apresentação:</label>
             <div class="col-sm-6">
-                <input type="text" ID="txtCorApresentacao" class="form-control" style="background-color:lemonchiffon" />
-                <input type="hidden" id="hiddenCorApresentacao" name="Color" value="lemonchiffon" />
+                <input type="text" ID="txtCorApresentacao" class="form-control" style="background-color:@(!string.IsNullOrEmpty(Model.Color) ? Model.Color : "lemonchiffon" )" />
+                <input type="hidden" id="hiddenCorApresentacao" name="Color" value="@(!string.IsNullOrEmpty(Model.Color) ? Model.Color : "lemonchiffon" )" />
                 <div style="margin-top:10px;">
                     <input type="button" class="btn color-picker" style="background-color:palegreen; width:50px; height:50px;" alt="palegreen" />
                     <input type="button" class="btn color-picker" style="background-color:lightsalmon; width:50px; height:50px;" alt="lightsalmon" />
@@ -101,7 +117,7 @@
 
         <button id="btnSave" type="submit" class="btn btn-success">Salvar</button>
 
-        <a class="btn btn-danger" href="/" role="button">Cancelar</a>
+        <a class="btn btn-danger" href="javascript:history.back();" role="button">Cancelar</a>
 
     </div>
 
@@ -119,7 +135,7 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
-            
+
             var dateNow = new Date();
 
             $(".inputDateInicio").datetimepicker({ locale: "pt-BR", format: "DD/MM/YYYY HH:mm:ss", defaultDate: dateNow, sideBySide: true });
@@ -130,19 +146,32 @@
                 function () {
                     var color = $(this).attr("alt");
                     $("#txtCorApresentacao").css("background-color", color);
+                    $('#hiddenCorApresentacao').val(color);
+                    //hiddenCorApresentacao
                 }
             );
-            
+
             $("form").submit(function (event) {
                 $("#divModal").modal();
             });
 
             setTimeout(
-                function ()
-                {
+                function () {
                     $(".alert-success").fadeOut();
                 }, 4000
             );
+
+
+
+
+            @if (!string.IsNullOrEmpty(Model.Ministry))
+            {
+                <text>
+                $('#ddlMinisterio').val('@Html.Raw(Model.Ministry)');
+                </text>
+            }
+
+
 
         });
 

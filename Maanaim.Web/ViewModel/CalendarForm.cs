@@ -7,6 +7,8 @@ namespace Maanaim.Web.ViewModel
 {
     public class CalendarForm
     {
+        public string Id { get; set; }
+
         public string Title { get; set; }
 
         public string Description { get; set; }
@@ -15,7 +17,7 @@ namespace Maanaim.Web.ViewModel
 
         public string EndDate { get; set; }
 
-        public string Ministerio { get; set; }
+        public string Ministry { get; set; }
 
         public string Color { get; set; }
     }
