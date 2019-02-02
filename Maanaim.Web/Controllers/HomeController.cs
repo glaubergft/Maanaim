@@ -20,14 +20,13 @@ namespace Maanaim.Controllers
 
         public HomeController(IOptions<MongoDBStorageConfig> config)
         {
-            //var colCalendar = new Data.DataCalendar(config.Value.ConnectionString).List().ToList<Calendar>();
-            //int i = colCalendar.Count();
             this.config = config;
         }
 
         public IActionResult Index()
         {
-            return View();
+            var colCalendar = new Data.DataCalendar(config.Value.ConnectionString).List().ToList<Calendar>();
+            return View(colCalendar);           
         }
         
         public IActionResult Gerenciar()
@@ -37,7 +36,15 @@ namespace Maanaim.Controllers
                                   select calendar.ToCalendarForm();
             return View(colCalendarForm.ToList());
         }
-        
+
+        [HttpGet]
+        public IActionResult Visualizar(string Id)
+        {
+            CalendarForm calendarForm = (new Data.DataCalendar(config.Value.ConnectionString)).Find(Id).ToCalendarForm();
+
+            return View("Visualizar", calendarForm);
+        }
+
         [HttpGet]
         public IActionResult IncluirAlterar(string Id)
         {
@@ -45,7 +52,12 @@ namespace Maanaim.Controllers
             if (!string.IsNullOrEmpty(Id))
                 calendarForm = (new Data.DataCalendar(config.Value.ConnectionString)).Find(Id).ToCalendarForm();
             else
+            {
                 calendarForm = new CalendarForm();
+                calendarForm.StartDate = DateTime.Now.ToString("dd/MM/yyyy") + " 18:00:00";
+                calendarForm.EndDate = calendarForm.StartDate;
+            }
+                
             return View("IncluirAlterar", calendarForm);
         }
 
@@ -63,6 +75,8 @@ namespace Maanaim.Controllers
                 {
                     (new Data.DataCalendar(config.Value.ConnectionString)).Insert(calendar);
                     calendarForm = new CalendarForm();
+                    calendarForm.StartDate = DateTime.Now.ToString("dd/MM/yyyy") + " 18:00:00";
+                    calendarForm.EndDate = calendarForm.StartDate;
                     ViewData["Message"] = "Programação incluída com sucesso!";
                 }
                 else
