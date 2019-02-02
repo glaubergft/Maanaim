@@ -250,7 +250,8 @@
             @if (!string.IsNullOrEmpty(Model.Ministry))
             {
                 <text>
-                $('#ddlMinisterio').val('@Html.Raw(Model.Ministry)');
+            $('#ddlMinisterio').val('@Html.Raw(Model.Ministry)');
+            $("#ddlMinisterio").trigger("change");
                 </text>
             }
 
