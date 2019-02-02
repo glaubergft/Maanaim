@@ -39,12 +39,12 @@
                     }
                     <text>
             {
-                title: '@calendarItem.Title',
+                title: '@Html.Raw(calendarItem.Title)',
                 start: '@calendarItem.StartDate.ToFullCalendar()',
                 end: '@calendarItem.EndDate.ToFullCalendar()',
                 color: '@calendarItem.BackgroundColor',
                 textColor: '@calendarItem.TextColor',
-                url: 'Home/Visualizar/@calendarItem.Id?@(Context.Request.Query["readonly"]=="1"?"readonly=1":"")'
+                url: '@this.ViewContext.RouteData.Values["controller"].ToString()/Visualizar/@calendarItem.Id'
             }
                     </text>
                     first = false;

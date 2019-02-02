@@ -46,12 +46,12 @@
                 </td>
                 <td>
 
-                    @using (Html.BeginForm("Excluir", "Home", FormMethod.Post))
+                    @using (Html.BeginForm("Excluir", "Adm", FormMethod.Post))
                     {
                         @Html.AntiForgeryToken()
                         <input type="hidden" name="Id" value="@calendarItem.Id" />
 
-                        @Html.ActionLink("Alterar", "IncluirAlterar", "Home", new { Id = calendarItem.Id }, new { @class = "btn btn-primary" })
+                        @Html.ActionLink("Alterar", "IncluirAlterar", "Adm", new { Id = calendarItem.Id }, new { @class = "btn btn-primary" })
 
                         <button id="btnDelete" type="submit" class="btn btn-danger" onclick="return confirm('Confirma exclusão?')">Excluir</button>
                     }
