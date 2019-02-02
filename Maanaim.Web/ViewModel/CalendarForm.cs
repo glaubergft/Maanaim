@@ -19,6 +19,8 @@ namespace Maanaim.Web.ViewModel
 
         public string Ministry { get; set; }
 
-        public string Color { get; set; }
+        public string BackgroundColor { get; set; }
+
+        public string TextColor { get; set; }
     }
 }
