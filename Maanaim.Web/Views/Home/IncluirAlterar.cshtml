@@ -1,8 +1,37 @@
 ﻿@model Maanaim.Web.ViewModel.CalendarForm;
 
+@section CSS {
+    <environment include="Development">
+        <link href="~/lib/Trumbowyg/ui/trumbowyg.css" rel="stylesheet" />
+        <link href="~/lib/Trumbowyg/plugins/colors/ui/trumbowyg.colors.css" rel="stylesheet" />
+    </environment>
+    <environment exclude="Development">
+        <link href="~/lib/Trumbowyg/ui/trumbowyg.min.css" rel="stylesheet" />
+        <link href="~/lib/Trumbowyg/plugins/colors/ui/trumbowyg.colors.min.css" rel="stylesheet" />
+    </environment>
+    <style>
+        .bootstrap-modal-selector {
+            overflow-y: scroll;
+        }
+    </style>
+}
+
+@{
+    if (ViewData["Message"] != null && ViewData["MessageClass"] != null)
+    {
+        <div id="divMsg" class="alert @ViewData["MessageClass"]">
+            <strong>@ViewData["Message"]</strong>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    }
+}
+
 @using (Html.BeginForm("IncluirAlterar", "Home", FormMethod.Post))
 {
     @Html.AntiForgeryToken()
+
 
     <div class="panel-heading">
         <div class="panel-title">
@@ -40,7 +69,13 @@
         <div class="form-group">
             <label for="txtDescricao" class="col-sm-3 control-label inputDate">Descrição:</label>
             <div class="col-sm-6">
+
                 <textarea ID="txtDescription" name="Description" class="form-control" required>@Model.Description</textarea>
+
+                <!--
+                <div id="divDescription"></div>
+                -->
+
             </div>
         </div>
 
@@ -62,52 +97,48 @@
             <label for="ddlMinisterio" class="col-sm-3 control-label">Ministério:</label>
             <div class="col-sm-6">
                 <select id="ddlMinisterio" name="Ministry" class="form-control" required>
-                    <option value="">(Selecione um Ministério)</option>
-                    <option value="ADMM">Igreja em Geral</option>
-                    <option value="ME">Ministério de Ensino (Talmid)</option>
-                    <option value="MJ">Missão Jovem</option>
-                    <option value="MM">Ministério de Mulheres</option>
-                    <option value="MH">Ministério de Homens</option>
-                    <option value="MF">Ministério da Família</option>
-                    <option value="MI">Ministério de Intercessão</option>
-                    <option value="SOMA">Missão Soma</option>
-                    <option value="MK">Missão Kids</option>
-                    <option value="MO">Ministério de Obreiros</option>
-                    <option value="MA">Ministério Acolhida</option>
-                    <option value="EF">Estrutura Física</option>
-                    <option value="ML">Ministério de Louvor</option>
-                    <option value="MEv">Ministério de Eventos</option>
-                    <option value="MS&Tec">Mídias Sociais e Tecnologia</option>
+                    <option value="" backgroundcolor="#FFFFFF" textcolor="black">(Selecione um Ministério)</option>
+                    <option value="ADMM" backgroundcolor="#fffacd" textcolor="#000000">Igreja em Geral</option>
+                    <option value="ME" backgroundcolor="#617b4c" textcolor="#ffffff">Ministério de Ensino (Talmid)</option>
+                    <option value="MJ" backgroundcolor="#9bc1e6" textcolor="#000000">Missão Jovem</option>
+                    <option value="MM" backgroundcolor="#fcd966" textcolor="#000000">Ministério de Mulheres</option>
+                    <option value="MH" backgroundcolor="#c9c9c9" textcolor="#000000">Ministério de Homens</option>
+                    <option value="MF" backgroundcolor="#f3b085" textcolor="#000000">Ministério da Família</option>
+                    <option value="MI" backgroundcolor="#315496" textcolor="#ffffff">Ministério de Intercessão</option>
+                    <option value="SOMA" backgroundcolor="#fffe00" textcolor="#000000">Missão Soma</option>
+                    <option value="MK" backgroundcolor="#ff3497" textcolor="#000000">Missão Kids</option>
+                    <option value="MO" backgroundcolor="#fc5151" textcolor="#000000">Ministério de Obreiros</option>
+                    <option value="MA" backgroundcolor="#fffacd" textcolor="#000000">Ministério Acolhida</option>
+                    <option value="EF" backgroundcolor="#fffacd" textcolor="#000000">Estrutura Física</option>
+                    <option value="ML" backgroundcolor="#548233" textcolor="#ffffff">Ministério de Louvor</option>
+                    <option value="MEv" backgroundcolor="#7030a2" textcolor="#ffffff">Ministério de Eventos</option>
+                    <option value="MS&Tec" backgroundcolor="#833d0c" textcolor="#ffffff">Mídias Sociais e Tecnologia</option>
                 </select>
             </div>
         </div>
 
         <div class="form-group">
-            <label for="txtCorApresentacao" class="col-sm-3 control-label">Cor de Apresentação:</label>
+            <label for="colorBackground" class="col-sm-3 control-label">Cor de Fundo:</label>
             <div class="col-sm-6">
-                <input type="text" ID="txtCorApresentacao" class="form-control" style="background-color:@(!string.IsNullOrEmpty(Model.Color) ? Model.Color : "lemonchiffon" )" />
-                <input type="hidden" id="hiddenCorApresentacao" name="Color" value="@(!string.IsNullOrEmpty(Model.Color) ? Model.Color : "lemonchiffon" )" />
-                <div style="margin-top:10px;">
-                    <input type="button" class="btn color-picker" style="background-color:palegreen; width:50px; height:50px;" alt="palegreen" />
-                    <input type="button" class="btn color-picker" style="background-color:lightsalmon; width:50px; height:50px;" alt="lightsalmon" />
-                    <input type="button" class="btn color-picker" style="background-color:lemonchiffon; width:50px; height:50px;" alt="lemonchiffon" />
-                    <input type="button" class="btn color-picker" style="background-color:paleturquoise; width:50px; height:50px;" alt="paleturquoise" />
-                    <input type="button" class="btn color-picker" style="background-color:gainsboro; width:50px; height:50px;" alt="gainsboro" />
-                </div>
+                <input type="color" ID="colorBackground" name="BackgroundColor" class="form-control" value="#fffacd" />
             </div>
-
         </div>
-        @{
-            if (ViewData["Message"] != null && ViewData["MessageClass"] != null)
-            {
-                <div id="divMsg" class="alert @ViewData["MessageClass"]">
-                    <strong>@ViewData["Message"]</strong>
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-            }
-        }
+
+        <div class="form-group">
+            <label for="colorText" class="col-sm-3 control-label">Cor do Texto:</label>
+            <div class="col-sm-6">
+                <input type="color" ID="colorText" name="TextColor" class="form-control" value="#fffff" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="colorText" class="col-sm-3 control-label">Pré-visualização da combinação de cores:</label>
+            <div class="col-sm-6">
+                <input type="text" ID="txtColorPreview" class="form-control" value="[Título a ser apresentado]" style="background-color:#fffacd; color:#000000" readonly="readonly" />
+            </div>
+        </div>
+
+
 
 
     </div>
@@ -117,7 +148,7 @@
 
         <button id="btnSave" type="submit" class="btn btn-success">Salvar</button>
 
-        <a class="btn btn-danger" href="javascript:history.back();" role="button">Cancelar</a>
+        <a class="btn btn-danger" href="/" role="button">Cancelar</a>
 
     </div>
 
@@ -133,6 +164,19 @@
 
 @section Scripts {
 
+    <environment include="Development">
+        <script src="~/lib/fullcalendar/fullcalendar.js"></script>
+        <script src="~/lib/fullcalendar/locale/pt-br.js"></script>
+        <script src="~/lib/Trumbowyg/trumbowyg.js"></script>
+        <script src="~/lib/Trumbowyg/plugins/colors/trumbowyg.colors.js"></script>
+    </environment>
+    <environment exclude="Development">
+        <script src="~/lib/fullcalendar/fullcalendar.min.js"></script>
+        <script src="~/lib/fullcalendar/locale/pt-br.min.js"></script>
+        <script src="~/lib/Trumbowyg/trumbowyg.min.js"></script>
+        <script src="~/lib/Trumbowyg/plugins/colors/trumbowyg.colors.min.js"></script>
+    </environment>
+
     <script type="text/javascript">
         $(document).ready(function () {
 
@@ -142,18 +186,61 @@
 
             $(".inputDateTermino").datetimepicker({ locale: "pt-BR", format: "DD/MM/YYYY HH:mm:ss", defaultDate: dateNow, sideBySide: true });
 
-            $(".color-picker").click(
+            $("#colorBackground,#colorText").change(
                 function () {
-                    var color = $(this).attr("alt");
-                    $("#txtCorApresentacao").css("background-color", color);
-                    $('#hiddenCorApresentacao').val(color);
-                    //hiddenCorApresentacao
+                    var bgColor = $("#colorBackground").val();
+                    var txtColor = $("#colorText").val();
+                    $("#txtColorPreview").css("background-color", bgColor);
+                    $("#txtColorPreview").css("color", txtColor);
+                }
+            );
+
+            $("#ddlMinisterio").change(
+                function () {
+
+                    var backgroundcolor = $(this).find("option:selected").attr("backgroundcolor");
+                    $("#colorBackground").val(backgroundcolor);
+
+                    var textcolor = $(this).find("option:selected").attr("textcolor");
+                    $("#colorText").val(textcolor);
+
+                    $("#colorBackground").trigger("change");
+                }
+            );
+
+            $('#txtDescription').trumbowyg(
+                {
+                    btns: ['foreColor', 'backColor',
+                        ['viewHTML'],
+                        ['undo', 'redo'], // Only supported in Blink browsers
+                        ['formatting'],
+                        ['strong', 'em', 'del'],
+                        ['superscript', 'subscript'],
+                        ['link'],
+                        ['insertImage'],
+                        ['justifyLeft', 'justifyCenter', 'justifyRight', 'justifyFull'],
+                        ['unorderedList', 'orderedList'],
+                        ['horizontalRule'],
+                        ['removeformat'],
+                        ['fullscreen']
+                    ]
+                }
+            );
+
+            $("#txtTitle").change(
+                function () {
+                    var txt = $("#txtTitle").val();
+                    if (txt == "")
+                        txt = "[Título a ser apresentado]";
+                    $("#txtColorPreview").val(txt);
                 }
             );
 
             $("form").submit(function (event) {
                 $("#divModal").modal();
             });
+
+
 
             setTimeout(
                 function () {
