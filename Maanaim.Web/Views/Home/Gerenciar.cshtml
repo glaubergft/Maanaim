@@ -1,4 +1,6 @@
-﻿@model List<Maanaim.Web.ViewModel.CalendarForm>;
+﻿@using Maanaim.Web.ExtensionMethods
+
+@model List<Maanaim.Web.ViewModel.CalendarForm>;
 
 <style>
     th, td {
@@ -24,32 +26,32 @@
             <th>
                 <span>Programação</span>
                 <br />
-                Período (Início - Término</span>)
+                Período (Início - Término)
             </th>
             <th>Ação</th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var calendar in Model)
+        @foreach (var calendarItem in Model)
         {
             <tr>
-                <td title="@calendar.Description">
+                <td title="@calendarItem.Description.StripHTML()">
                     <span style="font-weight:bold">
-                        @calendar.Title <span class="label" style="background-color:@calendar.Color">(@calendar.Ministry)</span>
+                        <a href="Visualizar/@calendarItem.Id">@calendarItem.Title</a> <span class="label" style="background-color:@calendarItem.BackgroundColor; color:@calendarItem.TextColor">(@calendarItem.Ministry)</span>
                     </span>
 
                     <br />
-                    <span class="btn btn-default">@calendar.StartDate</span>
-                    <span class="btn btn-default">@calendar.EndDate</span>
+                    <span class="btn btn-default">@calendarItem.StartDate</span>
+                    <span class="btn btn-default">@calendarItem.EndDate</span>
                 </td>
                 <td>
 
                     @using (Html.BeginForm("Excluir", "Home", FormMethod.Post))
                     {
                         @Html.AntiForgeryToken()
-                        <input type="hidden" name="Id" value="@calendar.Id" />
+                        <input type="hidden" name="Id" value="@calendarItem.Id" />
 
-                        @Html.ActionLink("Alterar/Ver", "IncluirAlterar", "Home", new { Id = calendar.Id }, new { @class = "btn btn-primary" })
+                        @Html.ActionLink("Alterar", "IncluirAlterar", "Home", new { Id = calendarItem.Id }, new { @class = "btn btn-primary" })
 
                         <button id="btnDelete" type="submit" class="btn btn-danger" onclick="return confirm('Confirma exclusão?')">Excluir</button>
                     }
