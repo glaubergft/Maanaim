@@ -20,9 +20,15 @@ namespace Maanaim.Web.ExtensionMethods
                                       StartDate = calendar.StartDate.ToString("dd/MM/yyyy HH:mm:ss"),
                                       EndDate = calendar.EndDate.ToString("dd/MM/yyyy HH:mm:ss"),
                                       Ministry = calendar.Ministry,
-                                      Color = calendar.Color
+                                      BackgroundColor = calendar.BackgroundColor,
+                                      TextColor = calendar.TextColor
                                   };
             return result;
+        }
+
+        public static string StripHTML(this string input)
+        {
+            return System.Text.RegularExpressions.Regex.Replace(input, "<.*?>", String.Empty).Replace("&nbsp;", " ");
         }
 
         public static DateTime FromBrToDateTime(this string dateTime)
@@ -39,6 +45,17 @@ namespace Maanaim.Web.ExtensionMethods
                 int.Parse(timeSplit[2])
                 );
 
+            return result;
+        }
+
+        public static string ToFullCalendar(this DateTime dateTime)
+        {
+            string result = null;
+
+            if (dateTime.TimeOfDay.TotalSeconds == 0)
+                result = dateTime.ToString("yyy-MM-dd");
+            else
+                result = dateTime.ToString("yyy-MM-dd HH:mm:ss");
             return result;
         }
 
@@ -64,7 +81,8 @@ namespace Maanaim.Web.ExtensionMethods
                 StartDate = startDate,
                 EndDate = endDate,
                 Ministry = calendarForm.Ministry,
-                Color = calendarForm.Color
+                BackgroundColor = calendarForm.BackgroundColor,
+                TextColor = calendarForm.TextColor
             };
             if (!string.IsNullOrEmpty(calendarForm.Id))
             {
