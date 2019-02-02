@@ -24,7 +24,10 @@ namespace Maanaim.Model
         [BsonElement("Ministry")]
         public string Ministry { get; set; }
 
-        [BsonElement("Color")]
-        public string Color { get; set; }
+        [BsonElement("BackgroundColor")]
+        public string BackgroundColor { get; set; }
+
+        [BsonElement("TextColor")]
+        public string TextColor { get; set; }
     }
 }
