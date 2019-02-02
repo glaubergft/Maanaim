@@ -36,6 +36,9 @@ namespace Maanaim.Data
 
         public ReplaceOneResult Update(Calendar calendar)
         {
+            calendar.StartDate = DateTime.SpecifyKind(calendar.StartDate, DateTimeKind.Utc); //MONGO UTC BUG FIX :P
+            calendar.EndDate = DateTime.SpecifyKind(calendar.EndDate, DateTimeKind.Utc); //MONGO UTC BUG FIX :P
+
             IMongoClient client = new MongoClient(_connectionString);
             IMongoDatabase database = client.GetDatabase(databaseName);
             IMongoCollection<Calendar> colCalendar = database.GetCollection<Calendar>("Calendario");
@@ -56,6 +59,9 @@ namespace Maanaim.Data
 
         public void Insert(Calendar calendar)
         {
+            calendar.StartDate = DateTime.SpecifyKind(calendar.StartDate, DateTimeKind.Utc); //MONGO UTC BUG FIX :P
+            calendar.EndDate = DateTime.SpecifyKind(calendar.EndDate, DateTimeKind.Utc); //MONGO UTC BUG FIX :P
+
             IMongoClient client = new MongoClient(_connectionString);
             IMongoDatabase database = client.GetDatabase(databaseName);
             IMongoCollection<Calendar> colCalendar = database.GetCollection<Calendar>("Calendario");
