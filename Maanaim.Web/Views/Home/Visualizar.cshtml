@@ -1,0 +1,116 @@
+﻿@model Maanaim.Web.ViewModel.CalendarForm;
+
+@section CSS {
+    
+}
+
+@using (Html.BeginForm("IncluirAlterar", "Home", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="panel-heading">
+        <div class="panel-title">
+            <div style="font-weight: bold;">
+
+                <h3>@Model.Title</h3>
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+
+    <div class="panel-body form-horizontal">
+
+        <div class="form-group">
+            <div class="col-sm-12">
+                @Html.Raw(@Model.Description)
+            </div>
+        </div>
+
+        <br />
+        
+        <div class="form-group">
+            <label for="txtStart" class="col-sm-3 control-label inputDate">Início:</label>
+            <div class="col-sm-6">
+                <input type="text" ID="txtStart" name="StartDate" class="inputDateInicio form-control" placeholder="Data e Hora" value="@Model.StartDate" readonly="readonly" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="txtTermino" class="col-sm-3 control-label inputDate">Término:</label>
+            <div class="col-sm-6">
+                <input type="text" ID="txtEnd" name="EndDate" class="inputDateTermino form-control" placeholder="Data e Hora" value="@Model.EndDate" readonly="readonly" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="ddlMinisterio" class="col-sm-3 control-label">Ministério:</label>
+            <div class="col-sm-6">
+                <select id="ddlMinisterio" name="Ministry" class="form-control" disabled="disabled" required>
+                    <option value="">(Selecione um Ministério)</option>
+                    <option value="ADMM">Igreja em Geral</option>
+                    <option value="ME">Ministério de Ensino (Talmid)</option>
+                    <option value="MJ">Missão Jovem</option>
+                    <option value="MM">Ministério de Mulheres</option>
+                    <option value="MH">Ministério de Homens</option>
+                    <option value="MF">Ministério da Família</option>
+                    <option value="MI">Ministério de Intercessão</option>
+                    <option value="SOMA">Missão Soma</option>
+                    <option value="MK">Missão Kids</option>
+                    <option value="MO">Ministério de Obreiros</option>
+                    <option value="MA">Ministério Acolhida</option>
+                    <option value="EF">Estrutura Física</option>
+                    <option value="ML">Ministério de Louvor</option>
+                    <option value="MEv">Ministério de Eventos</option>
+                    <option value="MS&Tec">Mídias Sociais e Tecnologia</option>
+                </select>
+            </div>
+        </div>
+
+
+
+
+    </div>
+
+
+    <div class="panel-footer text-center">
+
+        <a class="btn btn-info" href="javascript:history.back();" role="button">Voltar</a>
+
+    </div>
+
+}
+
+
+
+<div class="row">
+    <div class="col-sm-12">
+        <asp:Literal ID="ltlInclusaoMsg" runat="server"></asp:Literal>
+    </div>
+</div>
+
+@section Scripts {
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            
+            @if (!string.IsNullOrEmpty(Model.Ministry))
+            {
+                <text>
+                $('#ddlMinisterio').val('@Html.Raw(Model.Ministry)');
+                </text>
+            }
+
+
+
+        });
+
+
+    </script>
+
+}
+

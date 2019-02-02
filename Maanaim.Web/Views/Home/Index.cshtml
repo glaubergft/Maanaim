@@ -1,6 +1,6 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
+﻿@using Maanaim.Web.ExtensionMethods
+
+@model List<Maanaim.Model.Calendar>;
 
 @section CSS {
     <environment include="Development">
@@ -12,21 +12,45 @@
 }
 
 
-
-    <div id="calendar">
-
-    </div>
+<div id="calendar">
+</div>
 
 @section Scripts {
 
     <environment include="Development">
         <script src="~/lib/fullcalendar/fullcalendar.js"></script>
+        <script src="~/lib/fullcalendar/locale/pt-br.js"></script>
     </environment>
     <environment exclude="Development">
         <script src="~/lib/fullcalendar/fullcalendar.min.js"></script>
+        <script src="~/lib/fullcalendar/locale/pt-br.min.js"></script>
     </environment>
 
     <script>
+
+        var eventsList = [
+            @{ 
+                bool first = true;
+                foreach(var calendarItem in Model)
+                {
+                    if (!first)
+                    {
+                        <text>,</text>
+                    }
+                    <text>
+            {
+                title: '@calendarItem.Title',
+                start: '@calendarItem.StartDate.ToFullCalendar()',
+                end: '@calendarItem.EndDate.ToFullCalendar()',
+                color: '@calendarItem.BackgroundColor',
+                textColor: '@calendarItem.TextColor',
+                url: 'Home/Visualizar/@calendarItem.Id?@(Context.Request.Query["readonly"]=="1"?"readonly=1":"")'
+            }
+                    </text>
+                    first = false;
+                }
+            }
+        ];
 
         $(document).ready(function () {
 
@@ -36,66 +60,11 @@
                     center: 'title',
                     right: 'month,agendaWeek,agendaDay,listWeek'
                 },
-                defaultDate: '2019-01-12',
+                defaultDate: '@System.DateTime.Now.ToString("yyyy-MM-dd")',
                 navLinks: true, // can click day/week names to navigate views
                 editable: true,
                 eventLimit: true, // allow "more" link when too many events
-                events: [
-                    {
-                        title: 'All Day Event',
-                        start: '2019-01-01',
-                    },
-                    {
-                        title: 'Long Event',
-                        start: '2019-01-07',
-                        end: '2019-01-10'
-                    },
-                    {
-                        id: 999,
-                        title: 'Repeating Event',
-                        start: '2019-01-09T16:00:00'
-                    },
-                    {
-                        id: 999,
-                        title: 'Repeating Event',
-                        start: '2019-01-16T16:00:00'
-                    },
-                    {
-                        title: 'Conference',
-                        start: '2019-01-11',
-                        end: '2019-01-13'
-                    },
-                    {
-                        title: 'Meeting',
-                        start: '2019-01-12T10:30:00',
-                        end: '2019-01-12T12:30:00'
-                    },
-                    {
-                        title: 'Lunch',
-                        start: '2019-01-12T12:00:00'
-                    },
-                    {
-                        title: 'Meeting',
-                        start: '2019-01-12T14:30:00'
-                    },
-                    {
-                        title: 'Happy Hour',
-                        start: '2019-01-12T17:30:00'
-                    },
-                    {
-                        title: 'Dinner',
-                        start: '2019-01-12T20:00:00'
-                    },
-                    {
-                        title: 'Birthday Party',
-                        start: '2019-01-13T07:00:00'
-                    },
-                    {
-                        title: 'Click for Google',
-                        url: 'http://google.com/',
-                        start: '2019-01-28'
-                    }
-                ]
+                events: eventsList
             });
 
         });

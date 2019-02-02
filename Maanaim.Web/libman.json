@@ -21,6 +21,11 @@
       "provider": "cdnjs",
       "library": "fullcalendar@3.10.0",
       "destination": "wwwroot/lib/fullcalendar/"
+    },
+    {
+      "provider": "cdnjs",
+      "library": "Trumbowyg@2.14.0",
+      "destination": "wwwroot/lib/Trumbowyg/"
     }
   ]
 }

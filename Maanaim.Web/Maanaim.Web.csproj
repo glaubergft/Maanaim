@@ -20,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Update="Views\Home\Index - Copy.cshtml">
+    <Content Update="Views\Home\Visualizar.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
   </ItemGroup>
